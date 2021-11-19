@@ -2,19 +2,19 @@ import PySimpleGUI as sg
 import pandas as pd
 import os
 
-def read_files(files, thicknesses):
+def read_files(files, thicknesses,location):
     
     dfs = []
     
     for i,file in enumerate(files):
-        data = pd.read_csv(file, sep = ',', header = None )
+        data = pd.read_csv(f'{location}\{file}', sep = ',', header = None )
         data.columns = [f'Force (N) {i}',f'Deflection (mm) {i}',f'Time (s) {i}']
         data[f'Stress (MPA) {i}'] = data[f'Force (N) {i}'] / 550
         data[f'Thinkess (mm) {i}'] = thicknesses[i] - data[f'Deflection (mm) {i}']
         dfs.append(data)
     
     df = pd.concat(dfs, axis = 1)
-    return df.to_csv('Wrapped data.csv')
+    return df.to_csv(location + '\Wrapped data.csv')
 
 sg.theme('Dark Blue 3')
 
@@ -61,14 +61,14 @@ while True:
         window['-MAIN-'].update(visible=False)
         layout = '_GASKETS_'
         window[layout].update(visible=True)
-        for i in range(len(files_list)-1):
+        for i in range(len(files_list)):
             window.extend_layout(window['-COL1-'], [[sg.T(f'Gasket Thickness {i}'), sg.I(key=f'-IN-{i}-')]])
         
         
     elif event == '-CSVFILE-':
-        gasket_thicknesses = [int(values[f'-IN-{i}-']) for i in range(len(files_list)-1) ]
+        gasket_thicknesses = [float(values[f'-IN-{i}-']) for i in range(len(files_list)) ]
         
-        read_files(files_list,gasket_thicknesses)
+        read_files(files_list,gasket_thicknesses, values['_FOLDER_'])
         window.Element('_RESULT_').update(visible = True)
     
            

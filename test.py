@@ -7,10 +7,11 @@ def read_files(files, thicknesses,location):
     dfs = []
     
     for i,file in enumerate(files):
+        l= i+1
         data = pd.read_csv(f'{location}\{file}', sep = ',', header = None )
-        data.columns = [f'Force (N) {i}',f'Deflection (mm) {i}',f'Time (s) {i}']
-        data[f'Stress (MPA) {i}'] = data[f'Force (N) {i}'] / 550
-        data[f'Thinkess (mm) {i}'] = thicknesses[i] - data[f'Deflection (mm) {i}']
+        data.columns = [f'Force (N) {l}',f'Deflection (mm) {l}',f'Time (s) {l}']
+        data[f'Stress (MPA) {l}'] = data[f'Force (N) {l}'] / 550
+        data[f'Thinkess (mm) {l}'] = thicknesses[i] - data[f'Deflection (mm) {l}']
         dfs.append(data)
     
     df = pd.concat(dfs, axis = 1)

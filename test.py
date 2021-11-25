@@ -67,7 +67,7 @@ while True:
         
         
     elif event == '-CSVFILE-':
-        gasket_thicknesses = [float(values[f'-IN-{i}-']) for i in range(len(files_list)) ]
+        gasket_thicknesses = [float(values[f'-IN-{i+1}-']) for i in range(len(files_list)) ]
         
         read_files(files_list,gasket_thicknesses, values['_FOLDER_'])
         window.Element('_RESULT_').update(visible = True)
